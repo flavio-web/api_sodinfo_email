@@ -38,7 +38,7 @@ function sendEmailWithApiSodinfo( $username, $password, $company = '', $mailTo =
             CURLOPT_POSTFIELDS => http_build_query($params),
         )); //curl_setopt_array configura las opciones para una transferencia cURL
         
-        //$response = curl_exec($curl);// respuesta generada
+        $response = curl_exec($curl);// respuesta generada
         //print_r( $response );
     
         $err = curl_error($curl); // muestra errores en caso de existir
