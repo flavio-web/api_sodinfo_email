@@ -142,7 +142,6 @@
         }
 
        
-        throw new Exception("error provocado");
         $response = sendEmailDefault($_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC );
                     
         if( !$response['status'] ){
