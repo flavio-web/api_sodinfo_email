@@ -1,6 +1,7 @@
 <?php
 
     require_once("./vendor/autoload.php");
+    require_once("controllers/backup.controller.php");
     require('helpers/function_email.php');
     require('request/validated.php');
     require('helpers/function_document.php');
