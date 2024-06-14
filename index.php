@@ -5,7 +5,6 @@
     require('request/validated.php');
     require('helpers/function_document.php');
     require('helpers/api_sodinfo_send_email.php');
-    $path_raiz = dirname(__DIR__, 1);
     $dotenv = Dotenv\Dotenv::create(__DIR__);
     $dotenv->load();
 
