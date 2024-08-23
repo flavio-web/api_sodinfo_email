@@ -30,6 +30,8 @@ function sendEmailDefault($username = '', $password = '', $company = '', $mailTo
         $mail->Username   = $username;//"sodinfofacturacion@gmail.com";                     //SMTP username
         $mail->Password   = $password;//"txfhqqxzgxfabtqi";      //sodinfo2020                         //SMTP password
         //$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;  //Enable implicit TLS encryption
+        //$mail->SMTPSecure = "none"; -> porbar para correo corporativos
+        
         $mail->SMTPAuth   = "login";          
         $mail->Port       = 587;    
         $mail->CharSet = 'UTF-8';                                //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`

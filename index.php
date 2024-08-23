@@ -6,14 +6,15 @@
     require('request/validated.php');
     require('helpers/function_document.php');
     require('helpers/api_sodinfo_send_email.php');
-    $dotenv = Dotenv\Dotenv::create(__DIR__);
-    $dotenv->load();
 
     $response = [
         'status' => true,
         'message' => ''
     ];
 
+    $PATH_FILES="C:/Users/USER/Documents/facturas/";
+    $URL_API_RIDE="https://www.sodinfo.com.ec/api_sodinfo_ride";
+    $URL_STORE_XML_RIDE="https://www.sodinfo.com.ec/documentos/";
 
     try {
 
@@ -51,16 +52,16 @@
                 ),
             );
 
-            $pdf_response = json_decode(file_get_contents($_ENV['URL_API_RIDE'].'/'.$name_file_http.'?codigo='.$_POST['autorizacion'], false, stream_context_create($arrContextOptions)), true );
+            $pdf_response = json_decode(file_get_contents($URL_API_RIDE.'/'.$name_file_http.'?codigo='.$_POST['autorizacion'], false, stream_context_create($arrContextOptions)), true );
             if( !$pdf_response['status'] ){
                 throw new Exception($pdf_response['result']['error_msg']);
             }
 
             $pathSaveFiles = '';
-            if( !isset($_ENV['PATH_FILES']) || !empty($_ENV['PATH_FILES']) ){
+            if( !isset($PATH_FILES) || !empty($PATH_FILES) ){
                 $pathSaveFiles = 'facturas/';
             }else{
-                $pathSaveFiles = $_ENV['PATH_FILES'];
+                $pathSaveFiles = $PATH_FILES;
             }
 
             //copiar xml a carpeta especifica
