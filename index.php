@@ -16,6 +16,13 @@
     $URL_API_RIDE="https://www.sodinfo.com.ec/api_sodinfo_ride";
     $URL_STORE_XML_RIDE="https://www.sodinfo.com.ec/documentos/";
 
+    $attached = [];
+    $server_attached = [];
+    $addReplyTo = [];
+    $attachedString = [];
+    $addCC = [];
+    $addBCC = [];
+
     try {
 
         //var_dump($GLOBALS);
@@ -26,12 +33,8 @@
         if( !$validated['status'] ){
             throw new Exception($validated['message']);
         }
-    
 
-        $attached = [];
-        $server_attached = [];
-
-        if( isset($_POST['autorizacion']) ){
+        if( isset($_POST['autorizacion']) && !empty($_POST['autorizacion']) ){
             $datosAuth = getDatosAutorizacion( $_POST['autorizacion'] );
             $mes = $datosAuth['mes'];
             $anio = $datosAuth['anio'];
@@ -122,22 +125,22 @@
         }
 
 
-        $attachedString = [];
+        
         if( isset($_POST['attachedstring']) && !empty($_POST['attachedstring']) ){
             $attachedString = $_POST['attachedstring'];
         }
 
-        $addReplyTo = [];
+        
         if( isset($_POST['addReplyTo']) && count($_POST['addReplyTo']) > 0 ){
             $addReplyTo = $_POST['addReplyTo'];
         }
 
-        $addCC = [];
+        
         if( isset($_POST['addCC']) && count($_POST['addCC']) > 0 ){
             $addCC = $_POST['addCC'];
         }
 
-        $addBCC = [];
+        
         if( isset($_POST['addBCC']) && count($_POST['addBCC']) > 0 ){
             $addBCC = $_POST['addBCC'];
         }
@@ -145,7 +148,7 @@
        
         $response = sendEmailDefault($_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC );
                     
-        if( !$response['status'] ){
+        if( $response['status'] ){
             $response = sendEmailWithApiSodinfo( $_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], [], $server_attached, $addReplyTo, $addCC, $addBCC );
             if( !$response['status'] ){
                 throw new Exception($response['message']);
