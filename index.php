@@ -18,10 +18,6 @@
 
     try {
 
-        //var_dump($GLOBALS);
-        /*$request = json_decode(file_get_contents("php://input"), true);
-        print_r($request);*/
-
         $validated = validaciones( $_POST );
         if( !$validated['status'] ){
             throw new Exception($validated['message']);
@@ -31,7 +27,7 @@
         $attached = [];
         $server_attached = [];
 
-        if( isset($_POST['autorizacion']) ){
+        if (isset($_POST['autorizacion']) && !empty($_POST['autorizacion'])) {
             $datosAuth = getDatosAutorizacion( $_POST['autorizacion'] );
             $mes = $datosAuth['mes'];
             $anio = $datosAuth['anio'];
