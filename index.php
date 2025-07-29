@@ -10,7 +10,7 @@
         'message' => ''
     ];
 
-    $PATH_FILES="C:/Users/USER/Documents/facturas/";
+    $PATH_FILES="./facturas/";
     $URL_API_RIDE="https://www.sodinfo.com.ec/api_sodinfo_ride";
     $URL_STORE_XML_RIDE="https://www.sodinfo.com.ec/documentos/";
 

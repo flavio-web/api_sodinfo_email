@@ -1,0 +1,4 @@
+Add ini.php xampp 5.5
+
+curl.cainfo = "C:\xampp\php\extras\ssl\cacert.pem"
+openssl.cafile = "C:\xampp\php\extras\ssl\cacert.pem"
