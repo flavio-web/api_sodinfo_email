@@ -24,16 +24,14 @@ function sendEmailDefault($username = '', $password = '', $company = '', $mailTo
         //Server settings
         $mail->SMTPDebug = 0;                      //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'smtp.gmail.com';               //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        //$mail->SMTPAuth   = "login";
+        $mail->Host       = 'tls://smtp.gmail.com:587';               //Set the SMTP server to send through
+        //$mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->SMTPAuth   = "login";
         $mail->Username   = $username;//"sodinfofacturacion@gmail.com";                     //SMTP username
         $mail->Password   = $password;//"txfhqqxzgxfabtqi";      //sodinfo2020                         //SMTP password
         //$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;  //Enable implicit TLS encryption
-        //$mail->SMTPSecure = "none"; -> porbar para correo corporativos
-        
-        //$mail->SMTPAuth   = "login";          
-        $mail->Port       = 587;    
+        $mail->SMTPAuth   = "login";
+        $mail->Port       = 587;
         $mail->CharSet = 'UTF-8';                                //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //esto es para https

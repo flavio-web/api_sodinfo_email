@@ -1,6 +1,4 @@
 <?php
-
-    require_once("./vendor/autoload.php");
     require_once("controllers/backup.controller.php");
     require('helpers/function_email.php');
     require('request/validated.php');
@@ -28,6 +26,14 @@
         //var_dump($GLOBALS);
         /*$request = json_decode(file_get_contents("php://input"), true);
         print_r($request);*/
+
+       /*  $_POST['username'] = "facturacionsindicatoeloro@gmail.com";
+        $_POST['password'] = "arzeszpvjdxmzvyd";
+        $_POST['company'] = "SODINFO CIA LTDA";
+        $_POST['message'] = "Hola mundo!";
+        $_POST['subject'] = "EMAIL TEST FLAVIO";
+        $_POST['mailTo'] = ["flavioromanweb@gmail.com"];
+        $_POST['autorizacion'] = "0809202301010288208100120011030001126190000000117"; */
 
         $validated = validaciones( $_POST );
         if( !$validated['status'] ){
@@ -147,8 +153,7 @@
 
        
         $response = sendEmailDefault($_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC );
-                    
-        if( $response['status'] ){
+        if( !$response['status'] ){
             $response = sendEmailWithApiSodinfo( $_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], [], $server_attached, $addReplyTo, $addCC, $addBCC );
             if( !$response['status'] ){
                 throw new Exception($response['message']);
