@@ -53,15 +53,10 @@
                 throw new Exception($pdf_response['result']['error_msg']);
             }
 
-            $pathSaveFiles = !empty($PATH_FILES) ? $PATH_FILES : 'facturas/';
-
-            $fullPath = __DIR__ . "/" . $pathSaveFiles . $anio . $mes . '/' . $documento . '/' . $_POST['autorizacion'] . '/';
-
-            //copiar xml a carpeta especifica
-            crearEstructuraCarpetas($fullPath);
+            crearEstructuraCarpetas($PATH_FILES, $anio, $mes, $documento, $_POST['autorizacion']);
 
             //copiar archivo pdf
-            $savePdfFile = copiarDocumento( __DIR__."/".$pathSaveFiles.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['pdf']);
+            $savePdfFile = copiarDocumento($PATH_FILES.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['pdf']);
             if( !$savePdfFile['status'] ){
                 throw new Exception($savePdfFile['message']);
             }
@@ -71,7 +66,7 @@
             $name_file = substr($pdf_response['result']['pdf']['file_name'], 0, -3);
             $name_file_xml = $name_file."xml";
 
-            $saveXmlFile = copiarDocumento( __DIR__."/".$pathSaveFiles.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$name_file_xml, $name_file_xml, $response_xml, false);
+            $saveXmlFile = copiarDocumento($PATH_FILES.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$name_file_xml, $name_file_xml, $response_xml, false);
             if( !$saveXmlFile['status'] ){
                 throw new Exception($saveXmlFile['message']);
             }
@@ -90,9 +85,9 @@
            array_push($server_attached, $data_file_xml);
 
 
-            $attached[] = addFiletoAttachment(  __DIR__."/".$pathSaveFiles.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['file_name'] );
+            $attached[] = addFiletoAttachment( $PATH_FILES.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['file_name'] );
 
-            $attached[] =addFiletoAttachment(  __DIR__."/".$pathSaveFiles.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$name_file_xml, $name_file_xml );
+            $attached[] =addFiletoAttachment( $PATH_FILES.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$name_file_xml, $name_file_xml );
         }
 
     
