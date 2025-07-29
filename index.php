@@ -66,15 +66,12 @@
                 throw new Exception($pdf_response['result']['error_msg']);
             }
 
-            $pathSaveFiles = '';
-            if( !isset($PATH_FILES) || !empty($PATH_FILES) ){
-                $pathSaveFiles = 'facturas/';
-            }else{
-                $pathSaveFiles = $PATH_FILES;
-            }
+            $pathSaveFiles = !empty($PATH_FILES) ? $PATH_FILES : 'facturas/';
+
+            $fullPath = __DIR__ . "/" . $pathSaveFiles . $anio . $mes . '/' . $documento . '/' . $_POST['autorizacion'] . '/';
 
             //copiar xml a carpeta especifica
-            crearEstructuraCarpetas( __DIR__."/".$pathSaveFiles, $anio, $mes, $documento, $_POST['autorizacion'] );
+            crearEstructuraCarpetas($fullPath);
 
             //copiar archivo pdf
             $savePdfFile = copiarDocumento( __DIR__."/".$pathSaveFiles.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['pdf']);
