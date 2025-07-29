@@ -23,18 +23,6 @@
 
     try {
 
-        //var_dump($GLOBALS);
-        /*$request = json_decode(file_get_contents("php://input"), true);
-        print_r($request);*/
-
-       /*  $_POST['username'] = "facturacionsindicatoeloro@gmail.com";
-        $_POST['password'] = "arzeszpvjdxmzvyd";
-        $_POST['company'] = "SODINFO CIA LTDA";
-        $_POST['message'] = "Hola mundo!";
-        $_POST['subject'] = "EMAIL TEST FLAVIO";
-        $_POST['mailTo'] = ["flavioromanweb@gmail.com"];
-        $_POST['autorizacion'] = "0809202301010288208100120011030001126190000000117"; */
-
         $validated = validaciones( $_POST );
         if( !$validated['status'] ){
             throw new Exception($validated['message']);
@@ -53,7 +41,6 @@
                 throw new Exception("El código #".$documento." del documento es incorrecto.");
             }
 
-            //http api_sodinfo_ride
             $arrContextOptions=array(
                 "ssl"=>array(
                     "verify_peer"=>false,
@@ -89,7 +76,6 @@
                 throw new Exception($saveXmlFile['message']);
             }
 
-            //agregar pdf como archivo adjunto
            //agregar pdf como archivo adjunto
            $data_file_pdf['file']      = base64_decode($pdf_response['result']['pdf']['pdf']);
            $data_file_pdf['filename']  = $pdf_response['result']['pdf']['file_name'];
@@ -126,28 +112,22 @@
                 array_push($attached, $data_file);
             }
         }
-
-
         
         if( isset($_POST['attachedstring']) && !empty($_POST['attachedstring']) ){
             $attachedString = $_POST['attachedstring'];
         }
-
         
         if( isset($_POST['addReplyTo']) && count($_POST['addReplyTo']) > 0 ){
             $addReplyTo = $_POST['addReplyTo'];
         }
-
         
         if( isset($_POST['addCC']) && count($_POST['addCC']) > 0 ){
             $addCC = $_POST['addCC'];
         }
-
         
         if( isset($_POST['addBCC']) && count($_POST['addBCC']) > 0 ){
             $addBCC = $_POST['addBCC'];
         }
-
        
         $response = sendEmailDefault($_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC );
         if( !$response['status'] ){
