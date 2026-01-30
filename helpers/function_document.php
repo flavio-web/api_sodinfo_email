@@ -104,5 +104,24 @@ function getFileXmlApi( $path_xml ){
 }
 
 
-
+function generateLogBackup($message_error, $username, $password, $company, $mailTo, $subject, $message, $attached, $attachedString, $addReplyTo, $addCC, $addBCC)
+{
+    $backup = new Backup();
+    $dataBackup = [
+        "username"  => $username,
+        "password"  => $password,
+        "company"   => $company,
+        "mailto"    => $mailTo,
+        "subject"   => $subject,
+        "message"   => $message,
+        "attached"  => $attached,
+        "attachedString" => $attachedString,
+        "addReplyTo" => $addReplyTo,
+        "addCC"     => $addCC,
+        "addBCC"    => $addBCC,
+        "error"     => $message_error
+    ];
+    $pathSave = "./public/backup";
+    $backup->saveResponseTxt($dataBackup, $pathSave);
+}
 ?>

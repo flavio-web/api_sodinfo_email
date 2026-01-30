@@ -126,6 +126,8 @@
        
         $response = sendEmailDefault($_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC );
         if( !$response['status'] ){
+            generateLogBackup($response['message'], $_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC);
+        
             $response = sendEmailWithApiSodinfo( $_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], [], $server_attached, $addReplyTo, $addCC, $addBCC );
             if( !$response['status'] ){
                 throw new Exception($response['message']);
@@ -135,23 +137,7 @@
 
     } catch (Exception $e) {
 
-        $backup = new Backup();
-        $dataBackup = [
-            "username"  => $_POST['username'],
-            "password"  => $_POST['password'],
-            "company"   => $_POST['company'],
-            "mailto"    => $_POST['mailTo'],
-            "subject"   => $_POST['subject'], 
-            "message"   => $_POST['message'], 
-            "attached"  => $attached,
-            "attachedString" => $attachedString, 
-            "addReplyTo"=> $addReplyTo, 
-            "addCC"     => $addCC, 
-            "addBCC"    => $addBCC,
-            "error"     => $e->getMessage()
-        ];
-        $pathSave = "./public/backup";
-        $respaldo = $backup->saveResponseTxt( $dataBackup, $pathSave );
+        generateLogBackup($e->getMessage(), $_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC);
 
         $response['status'] = false;
         $response['message'] = $e->getMessage();
