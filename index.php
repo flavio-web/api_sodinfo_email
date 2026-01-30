@@ -53,15 +53,23 @@
                 throw new Exception($pdf_response['result']['error_msg']);
             }
 
-            $pathSaveFiles = !empty($_ENV['PATH_FILES']) ? $_ENV['PATH_FILES'] : 'facturas/';
+            $pathSaveFiles = !empty($_ENV['PATH_FILES']) ? rtrim($_ENV['PATH_FILES'], '/\\') . '/' : 'facturas/';
 
-            $fullPath = __DIR__ . "/" . $pathSaveFiles . $anio . $mes . '/' . $documento . '/' . $_POST['autorizacion'] . '/';
+            if (preg_match('/^[A-Z]:[\/\\\\]/i', $pathSaveFiles)) {
+                // Ruta absoluta (C:/...)
+                $basePath = $pathSaveFiles;
+            } else {
+                // Ruta relativa
+                $basePath = __DIR__ . '/' . $pathSaveFiles;
+            }
+
+            $fullPath = $basePath . $anio . $mes . '/' . $documento . '/' . $_POST['autorizacion'] . '/';
 
             //copiar xml a carpeta especifica
             crearEstructuraCarpetas($fullPath);
 
             //copiar archivo pdf
-            $savePdfFile = copiarDocumento( __DIR__."/".$pathSaveFiles.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['pdf']);
+            $savePdfFile = copiarDocumento($fullPath.$pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['pdf']);
             if( !$savePdfFile['status'] ){
                 throw new Exception($savePdfFile['message']);
             }
@@ -71,7 +79,7 @@
             $name_file = substr($pdf_response['result']['pdf']['file_name'], 0, -3);
             $name_file_xml = $name_file."xml";
 
-            $saveXmlFile = copiarDocumento( __DIR__."/".$pathSaveFiles.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$name_file_xml, $name_file_xml, $response_xml, false);
+            $saveXmlFile = copiarDocumento($fullPath.$name_file_xml, $name_file_xml, $response_xml, false);
             if( !$saveXmlFile['status'] ){
                 throw new Exception($saveXmlFile['message']);
             }
@@ -91,9 +99,9 @@
            array_push($server_attached, $data_file_xml);
 
 
-            $attached[] = addFiletoAttachment(  __DIR__."/".$pathSaveFiles.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['file_name'] );
+            $attached[] = addFiletoAttachment(  $fullPath.$pdf_response['result']['pdf']['file_name'], $pdf_response['result']['pdf']['file_name'] );
 
-            $attached[] =addFiletoAttachment(  __DIR__."/".$pathSaveFiles.$anio.$mes.'/'.$documento.'/'.$_POST['autorizacion'].'/'.$name_file_xml, $name_file_xml );
+            $attached[] =addFiletoAttachment(  $fullPath.$name_file_xml, $name_file_xml );
         }
 
     
@@ -135,35 +143,19 @@
             $addBCC = $_POST['addBCC'];
         }
 
-        $response = sendEmailDefault($_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC );
+        //$response = sendEmailDefault($_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC );
                     
-        if( !$response['status'] ){
+        //if( !$response['status'] ){
+            //generateLogBackup($e->getMessage(), $_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC);
+
             $response = sendEmailWithApiSodinfo( $_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], [], $server_attached, $addReplyTo, $addCC, $addBCC );
             if( !$response['status'] ){
                 throw new Exception($response['message']);
             }
-        }
+        //}
 
     } catch (Exception $e) {
-
-        $backup = new Backup();
-        $dataBackup = [
-            "username"  => $_POST['username'],
-            "password"  => $_POST['password'],
-            "company"   => $_POST['company'],
-            "mailto"    => $_POST['mailTo'],
-            "subject"   => $_POST['subject'], 
-            "message"   => $_POST['message'], 
-            "attached"  => $attached,
-            "attachedString" => $attachedString, 
-            "addReplyTo"=> $addReplyTo, 
-            "addCC"     => $addCC, 
-            "addBCC"    => $addBCC,
-            "error"     => $e->getMessage()
-        ];
-        $pathSave = "./public/backup";
-        $respaldo = $backup->saveResponseTxt( $dataBackup, $pathSave );
-
+        generateLogBackup($e->getMessage(), $_POST['username'], $_POST['password'], $_POST['company'], $_POST['mailTo'], $_POST['subject'], $_POST['message'], $attached, $attachedString, $addReplyTo, $addCC, $addBCC);
         $response['status'] = false;
         $response['message'] = $e->getMessage();
     }

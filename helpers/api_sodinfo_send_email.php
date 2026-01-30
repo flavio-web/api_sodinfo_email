@@ -42,11 +42,25 @@ function sendEmailWithApiSodinfo( $username, $password, $company = '', $mailTo =
         //print_r( $response );
     
         $err = curl_error($curl); // muestra errores en caso de existir
-        
-        curl_close($curl); // termina la sesión 
-        
-        if ( $err ) {
-            throw new Exception( $err );
+
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        if ($err) {
+            throw new Exception($err);
+        }
+
+        if ($httpCode >= 400) {
+            throw new Exception("HTTP Error: $httpCode - Response: $response");
+        }
+
+        $responseData = json_decode($response, true);
+        if ($responseData === null) {
+            throw new Exception("Error decoding JSON: $response");
+        }
+
+        if (!$responseData['status']) {
+            throw new Exception($responseData['message'] ?? 'Error desconocido');
         }
 
         $data['message'] = "Correo electronico enviado correctamente.";

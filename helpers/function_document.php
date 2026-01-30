@@ -43,24 +43,15 @@ function getFileNameRequestByCodeDoc( $codeDoc = '' ){
     return $name_file_http;
 }
 
-function crearEstructuraCarpetas( $path_princial = '', $anio = '', $mes = '', $documento = '', $autorizacion = ''){
-    
-    if (!file_exists($path_princial)) {
-        mkdir($path_princial, 0777, true);
-    }
-
-    if (!file_exists($path_princial.$anio.$mes)) {
-        mkdir($path_princial.$anio.$mes, 0777, true);
-    }
-
-    if (!file_exists($path_princial.$anio.$mes.'/'.$documento)) {
-        mkdir($path_princial.$anio.$mes.'/'.$documento, 0777, true);
-    }
-
-    if (!file_exists($path_princial.$anio.$mes.'/'.$documento.'/'.$autorizacion)) {
-        mkdir($path_princial.$anio.$mes.'/'.$documento.'/'.$autorizacion, 0777, true);
+function crearEstructuraCarpetas($path_principal = '')
+{
+    if (!is_dir($path_principal)) {
+        if (!mkdir($path_principal, 0777, true)) {
+            throw new Exception("No se pudo crear el directorio: $path_principal");
+        }
     }
 }
+
 
 function copiarDocumento( $path_file, $name_file, $file,  $convert_base64 = true ){
 
@@ -103,6 +94,24 @@ function getFileXmlApi( $path_xml ){
     return file_get_contents($path_xml, false, stream_context_create($arrContextOptions));
 }
 
-
+function generateLogBackup($message_error, $username, $password, $company, $mailTo, $subject, $message, $attached, $attachedString, $addReplyTo, $addCC, $addBCC){
+    $backup = new Backup();
+    $dataBackup = [
+        "username"  => $username,
+        "password"  => $password,
+        "company"   => $company,
+        "mailto"    => $mailTo,
+        "subject"   => $subject,
+        "message"   => $message,
+        "attached"  => $attached,
+        "attachedString" => $attachedString,
+        "addReplyTo" => $addReplyTo,
+        "addCC"     => $addCC,
+        "addBCC"    => $addBCC,
+        "error"     => $message_error
+    ];
+    $pathSave = "./public/backup";
+    $backup->saveResponseTxt($dataBackup, $pathSave);
+}
 
 ?>
