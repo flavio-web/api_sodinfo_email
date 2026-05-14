@@ -15,6 +15,12 @@
         'message' => ''
     ];
 
+    $attached = [];
+    $server_attached = [];
+    $attachedString = [];
+    $addReplyTo = [];
+    $addCC = [];
+    $addBCC = [];
 
     try {
 
@@ -22,10 +28,6 @@
         if( !$validated['status'] ){
             throw new Exception($validated['message']);
         }
-    
-
-        $attached = [];
-        $server_attached = [];
 
         if (isset($_POST['autorizacion']) && !empty($_POST['autorizacion'])) {
             $datosAuth = getDatosAutorizacion( $_POST['autorizacion'] );
@@ -122,23 +124,18 @@
             }
         }
 
-
-        $attachedString = [];
         if( isset($_POST['attachedstring']) && !empty($_POST['attachedstring']) ){
             $attachedString = $_POST['attachedstring'];
         }
 
-        $addReplyTo = [];
         if( isset($_POST['addReplyTo']) && count($_POST['addReplyTo']) > 0 ){
             $addReplyTo = $_POST['addReplyTo'];
         }
 
-        $addCC = [];
         if( isset($_POST['addCC']) && count($_POST['addCC']) > 0 ){
             $addCC = $_POST['addCC'];
         }
 
-        $addBCC = [];
         if( isset($_POST['addBCC']) && count($_POST['addBCC']) > 0 ){
             $addBCC = $_POST['addBCC'];
         }
